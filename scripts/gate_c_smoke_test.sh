@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
-VIDEO_PATH="${VIDEO_PATH:-data/samples/sample.mp4}"
+VIDEO_PATH="${VIDEO_PATH:-data/samples/horse30_sample1.mp4}"
 OUTPUT_DIR="${OUTPUT_DIR:-outputs/gate_c_smoke}"
 DLC_PROJECT="${DLC_PROJECT:-}"
 MODE_INFER_ONLY="${MODE_INFER_ONLY:-false}"

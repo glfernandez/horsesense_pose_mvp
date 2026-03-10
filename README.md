@@ -28,24 +28,26 @@ pip install -r requirements.txt
 ```
 
 ## Run Demo on Sample Video
-1. Put a sample horse video in `data/samples/`
-2. Run:
+Use the included sample:
+- `data/samples/horse30_sample1.mp4`
+
+Run inference only:
 
 ```bash
 python run_pose_pipeline.py \
-  --input_video data/samples/sample.mp4 \
-  --output_dir outputs/demo \
-  --dlc_project /path/to/dlc_project \
+  --input_video data/samples/horse30_sample1.mp4 \
+  --output_dir outputs/dlc_superanimal_smoke \
+  --model_source hf_superanimal_quadruped \
   --mode infer_only
 ```
 
-Then run full pipeline:
+Then run full pipeline from generated keypoints CSV:
 
 ```bash
 python run_pose_pipeline.py \
-  --input_video data/samples/sample.mp4 \
-  --output_dir outputs/demo \
-  --dlc_project /path/to/dlc_project \
+  --input_video data/samples/horse30_sample1.mp4 \
+  --output_dir outputs/dlc_superanimal_smoke \
+  --keypoints_csv data/samples/horse30_sample1DLC_snapshot-700000.csv \
   --mode both
 ```
 
@@ -72,7 +74,7 @@ Optional:
 - `--shuffle 1`
 - `--trainingsetindex 0`
 - `--gputouse 0`
-- `--model_source hf_superanimal_quadruped` (reserved metadata / future model-zoo convenience)
+- `--model_source hf_superanimal_quadruped`
 - `--use_detector_crop true|false`
 - `--t1 0.8`
 - `--t2 2.0`
@@ -87,18 +89,18 @@ For overlay/metrics/report development, you can skip DeepLabCut inference and pr
 
 ```bash
 python run_pose_pipeline.py \
-  --input_video data/samples/sample.mp4 \
+  --input_video data/samples/horse30_sample1.mp4 \
   --output_dir outputs/demo \
-  --keypoints_csv data/samples/sample_keypoints.csv \
+  --keypoints_csv data/samples/horse30_sample1_keypoints.csv \
   --mode both
 ```
 
 ## Gate C Smoke Test (Target Machine)
-Use the helper script to validate Python, DeepLabCut import, `ffmpeg`, DLC inference, and the full pipeline in one run:
+Use the helper script to validate Python, DeepLabCut import, `ffmpeg`, inference, and the full pipeline in one run:
 
 ```bash
 cd "/Users/gl_fernandez/Library/CloudStorage/GoogleDrive-gary@dvaco.io/My Drive/HorseSense/horsesense_pose_mvp"
-DLC_PROJECT=/absolute/path/to/dlc_project ./scripts/gate_c_smoke_test.sh
+./scripts/gate_c_smoke_test.sh
 ```
 
 Optional env vars:
@@ -106,6 +108,7 @@ Optional env vars:
 - `FPS_OVERRIDE=30`
 - `KEEP_DLC_OUTPUTS_IN_VIDEO_DIR=true`
 - `VIDEO_PATH=data/jack_processed/jack_clip_01.mp4`
+- `DLC_PROJECT=/absolute/path/to/dlc_project` (only when using project-based inference)
 
 ## Simple Dashboard (Local Review)
 Launch a lightweight Streamlit dashboard to inspect overlay videos, QC status, metrics, and reports:
@@ -118,8 +121,14 @@ cd "/Users/gl_fernandez/Library/CloudStorage/GoogleDrive-gary@dvaco.io/My Drive/
 Or directly:
 
 ```bash
-python -m streamlit run app/dashboard.py
+python -m streamlit run app/dashboard.py --server.port 8504 --server.headless true
 ```
+
+Default dashboard URL:
+- `http://localhost:8504`
+
+Dashboard upload supports:
+- `.mp4`, `.mov`, `.m4v`, `.avi`
 
 ## Outputs
 - `*_overlay.mp4`: video with keypoints overlay
